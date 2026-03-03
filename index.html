@@ -1,81 +1,106 @@
-<script>
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = 400;
-    canvas.height = 600;
-
-    let x = canvas.width / 2;
-    let y = canvas.height - 30;
-    let dx = 2; 
-    let dy = -2; 
-    let ballRadius = 10;
-    let paddleHeight = 15;
-    let paddleWidth = 90;
-    let paddleX = (canvas.width - paddleWidth) / 2;
-    let score = 0;
-
-    document.addEventListener("touchmove", (e) => {
-        let touch = e.touches[0];
-        let relativeX = touch.clientX - canvas.offsetLeft;
-        if(relativeX > 0 && relativeX < canvas.width) {
-            paddleX = relativeX - paddleWidth / 2;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Sekme Oyunu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #222; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            touch-action: none;
         }
-    }, { passive: false });
+        canvas { 
+            background: #000; 
+            border: 2px solid #fff; 
+            max-width: 100%; 
+            max-height: 100%; 
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
 
-    function drawScore() {
-        ctx.font = "16px Arial"; 
-        ctx.fillStyle = "#fff"; 
-        ctx.fillText("Skor: " + score, 8, 20); 
-    }
+        canvas.width = 400;
+        canvas.height = 600;
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); 
-        drawScore();
-        
-        // Topu Çiz
-        ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-        ctx.fillStyle = "#00FF00";
-        ctx.fill();
-        ctx.closePath();
+        let x = canvas.width / 2;
+        let y = canvas.height - 30;
+        let dx = 2; 
+        let dy = -2; 
+        let ballRadius = 10;
+        let paddleHeight = 15;
+        let paddleWidth = 90;
+        let paddleX = (canvas.width - paddleWidth) / 2;
+        let score = 0;
 
-        // Barı Çiz
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(paddleX, canvas.height - paddleHeight - 10, paddleWidth, paddleHeight);
-
-        // Duvar ve Bar Çarpma Mantığı
-        if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) dx = -dx;
-        
-        if(y + dy < ballRadius) {
-            dy = -dy;
-        } else if(y + dy > canvas.height - ballRadius - 10) {
-            if(x > paddleX && x < paddleX + paddleWidth) {
-                dy = -dy;
-                dx *= 1.1; // Hızlanma algoritman burada
-                dy *= 1.1;
-                score++;
-            } else {
-                // Skor mesajları mantığın çok güzel olmuş
-                if(score > 20) {
-                    alert("OYUN BİTTİ! 🏆 \nSkorun: " + score + "\nHelal Olsun!");
-                } else if (score > 15) {
-                    alert("OYUN BİTTİ! 📈 \nSkorun: " + score + "\nFena Değil!");
-                } else if (score < 10) {
-                    alert("OYUN BİTTİ! 😅 \nSkorun: " + score + "\nBu Sayılmaz Bi Daha!");
-                } else {
-                    alert("OYUN BİTTİ! 🎮 \nSkorun: " + score + "\nEh işte...");
-                }
-                document.location.reload();
-                return; // Reload olana kadar kodun devam etmesini engeller
+        document.addEventListener("touchmove", (e) => {
+            let touch = e.touches[0];
+            let relativeX = touch.clientX - canvas.offsetLeft;
+            if(relativeX > 0 && relativeX < canvas.width) {
+                paddleX = relativeX - paddleWidth / 2;
             }
+        }, { passive: false });
+
+        function drawScore() {
+            ctx.font = "16px Arial"; 
+            ctx.fillStyle = "#fff"; 
+            ctx.fillText("Skor: " + score, 8, 20); 
         }
 
-        // Hareket kodları fonksiyonun içinde kalmalı!
-        x += dx;
-        y += dy;
-        requestAnimationFrame(draw); 
-    }
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            drawScore();
+            
+            ctx.beginPath();
+            ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+            ctx.fillStyle = "#00FF00";
+            ctx.fill();
+            ctx.closePath();
 
-    draw(); // Oyunu ilk kez başlat
-</script>
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(paddleX, canvas.height - paddleHeight - 10, paddleWidth, paddleHeight);
+
+            if(x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
+                dx = -dx;
+            }
+
+            if(y + dy < ballRadius) {
+                dy = -dy;
+            } else if(y + dy > canvas.height - ballRadius - 10) {
+                if(x > paddleX && x < paddleX + paddleWidth) {
+                    dy = -dy;
+                    dx *= 1.1;
+                    dy *= 1.1;
+                    score++;
+                } else {
+                    if(score > 20) {
+                        alert("OYUN BİTTİ! \nSkorun: " + score + " - Helal Olsun!");
+                    } else if (score > 15) {
+                        alert("OYUN BİTTİ! \nSkorun: " + score + " - Fena Değil!");
+                    } else if (score < 10) {
+                        alert("OYUN BİTTİ! \nSkorun: " + score + " - Bu Sayılmaz Bi Daha!");
+                    } else {
+                        alert("OYUN BİTTİ! \nSkorun: " + score + " - Eh işte...");
+                    }
+                    document.location.reload();
+                    return;
+                }
+            }
+
+            x += dx;
+            y += dy;
+            requestAnimationFrame(draw); 
+        }
+
+        draw();
+    </script>
+</body>
+</html>
