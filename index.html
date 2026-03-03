@@ -63,8 +63,20 @@ function draw() {
             dy *= 1.1;
             score ++;
         } else {
-            alert("OYUN BİTTİ! 🎮 \nSkorun: " + score + "Try Again");
+            if(score>20){
+                alert("OYUN BİTTİ! bb \nSkorun: " + score + "Helal Olsun");
+            }
+            else if (score>15){
+                alert("OYUN BİTTİ! bb \nSkorun: " + score + " Fena Değil");
+            }
+            else if(score<10){
+            alert("OYUN BİTTİ! bb \nSkorun: " + score + " Bu Sayılmaz Bi Daha");
+            }
+            else{
+                alert("OYUN BİTTİ! bb \nSkorun: " + score + " Eh işte");
+            }
             document.location.reload();
+            }
         }
     }
 
